@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textSize="60sp" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="2"
+        android:orientation="vertical"
+        android:useDefaultMargins="true">
+
+        <Button
+            android:id="@+id/start_server"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill_horizontal"
+            android:text="Start Server"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/stop_server"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill_horizontal"
+            android:text="Stop Server"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/connect_server"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:text="Connect Server"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/disconnect_server"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:text="Disconnect Server"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/test_loopback"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:text="Test Loopback"
+            android:textAllCaps="false" />
+    </GridLayout>
+</LinearLayout>
