@@ -4,6 +4,9 @@ import static com.pujh.socket.MainActivity.SOCKET_NAME;
 
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
+import android.system.ErrnoException;
+import android.system.Os;
+import android.system.OsConstants;
 import android.util.Log;
 
 import java.io.IOException;
@@ -19,6 +22,7 @@ public class LocalSocketClient {
     private boolean isRunning = false;
 
     public void startClient() {
+        Log.d(TAG, "Client start");
         if (isStart && isRunning) {
             return;
         }
@@ -35,11 +39,13 @@ public class LocalSocketClient {
     }
 
     public void stopClient() {
+        Log.d(TAG, "Client stop");
         if (!isStart) {
             return;
         }
         isStart = false;
         try {
+            socketThread.closeSocket();
             socketThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -69,6 +75,7 @@ public class LocalSocketClient {
         @Override
         public void run() {
             isRunning = true;
+            Log.d(TAG, "Client running start");
             byte[] buffer = new byte[1024];
             while (isStart) {
                 try {
@@ -76,9 +83,13 @@ public class LocalSocketClient {
                     if (len > 0) {
                         String text = new String(buffer, 0, len, StandardCharsets.UTF_8);
                         Log.d(TAG, "client received text: " + text);
+                    } else if (len == -1) {
+                        Log.d(TAG, "client received eof!");
+                        break;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    break;
                 }
             }
 
@@ -89,6 +100,19 @@ public class LocalSocketClient {
                 e.printStackTrace();
             }
             isRunning = false;
+            Log.d(TAG, "Client running end");
+        }
+
+        public void closeSocket() {
+            if (isRunning) {
+                try {
+                    Os.shutdown(socket.getFileDescriptor(), OsConstants.SHUT_RDWR);
+                } catch (ErrnoException e) {
+                    if (e.errno != OsConstants.EBADF) {
+                        Log.e(TAG, "关闭失败", e);
+                    }
+                }
+            }
         }
 
         public void sendData(byte[] data) {
