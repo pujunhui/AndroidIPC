@@ -1,5 +1,7 @@
 package com.pujh.socket;
 
+import static com.pujh.socket.MainActivity.SOCKET_NAME;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -67,6 +69,18 @@ public class RemoteService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    private void startJavaServerSocket() {
+        server.startServer(SOCKET_NAME);
+    }
+
+    private void stopJavaServerSocket() {
+        server.stopServer();
+    }
+
+    private native void startNativeServerSocket();
+
+    private native void stopNativeServerSocket();
+
     private static void sendRemoteAction(Context context, int action) {
         Intent intent = new Intent(context, RemoteService.class);
         intent.putExtra("action", action);
@@ -89,16 +103,4 @@ public class RemoteService extends Service {
         sendRemoteAction(context, STOP_NATIVE_SERVER_SOCKET);
     }
 
-
-    private void startJavaServerSocket() {
-        server.startServer();
-    }
-
-    private void stopJavaServerSocket() {
-        server.stopServer();
-    }
-
-    private native void startNativeServerSocket();
-
-    private native void stopNativeServerSocket();
 }

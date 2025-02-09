@@ -4,6 +4,7 @@ project("socket")
 
 #socket server
 add_library(server SHARED
+        socket.cpp
         server.cpp)
 
 target_link_libraries(server
@@ -12,6 +13,7 @@ target_link_libraries(server
 
 #socket client
 add_library(client SHARED
+        socket.cpp
         client.cpp)
 
 target_link_libraries(client

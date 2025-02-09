@@ -21,7 +21,7 @@ public class LocalSocketClient {
     private boolean isStart = false;
     private boolean isRunning = false;
 
-    public void startClient() {
+    public void startClient(String socketName) {
         Log.d(TAG, "Client start");
         if (isStart && isRunning) {
             return;
@@ -29,7 +29,7 @@ public class LocalSocketClient {
         isStart = true;
         try {
             LocalSocket socket = new LocalSocket();
-            LocalSocketAddress address = new LocalSocketAddress(SOCKET_NAME, LocalSocketAddress.Namespace.ABSTRACT);
+            LocalSocketAddress address = new LocalSocketAddress(socketName, LocalSocketAddress.Namespace.ABSTRACT);
             socket.connect(address);
             socketThread = new SocketThread(socket);
             socketThread.start();

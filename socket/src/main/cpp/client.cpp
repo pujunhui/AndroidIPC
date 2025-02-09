@@ -2,6 +2,8 @@
 // Created by 24415 on 2025-02-07.
 //
 
+#define LOG_TAG "socket_client"
+
 #include "socket.h"
 
 #include <sys/types.h>
@@ -10,21 +12,26 @@
 #include <unistd.h>
 #include <jni.h>
 
-void startClientSocket() {
+void startClientSocket(const char *name, int namespaceId) {
     int fd;
     struct sockaddr_un my_addr;
     socklen_t peer_addr_size;
 
     fd = socket(AF_UNIX, SOCK_STREAM, 0);
     if (fd == -1) {
+        LOG_E("socket client create filed!");
         return;
     }
 
-    memset(&my_addr, 0, sizeof(struct sockaddr_un));
-    my_addr.sun_family = AF_UNIX;
-    strncpy(my_addr.sun_path, SOCKET_PATH, sizeof(my_addr.sun_path) - 1);
+    socklen_t addrlen;
 
-    if (connect(fd, (struct sockaddr *) &my_addr, sizeof(struct sockaddr_un)) == -1) {
+    if (socket_make_sockaddr_un(SOCKET_PATH, namespaceId, &my_addr, &addrlen) == -1) {
+        LOG_E("socket server make sockaddr_un filed!");
+        return;
+    }
+
+    if (connect(fd, (struct sockaddr *) &my_addr, addrlen) == -1) {
+        LOG_E("socket client connect filed!");
         return;
     }
 

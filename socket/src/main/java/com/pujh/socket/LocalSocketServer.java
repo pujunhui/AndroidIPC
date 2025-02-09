@@ -1,7 +1,5 @@
 package com.pujh.socket;
 
-import static com.pujh.socket.MainActivity.SOCKET_NAME;
-
 import android.net.Credentials;
 import android.net.LocalServerSocket;
 import android.net.LocalSocket;
@@ -24,7 +22,7 @@ public class LocalSocketServer {
     private boolean isStart = false;
     private boolean isRunning = false;
 
-    public void startServer() {
+    public void startServer(String socketName) {
         Log.d(TAG, "Server start");
         if (isStart && isRunning) {
             return;
@@ -32,7 +30,7 @@ public class LocalSocketServer {
         isStart = true;
         try {
             //使用LocalServerSocket，只能创建抽象命名空间socket
-            LocalServerSocket serverSocket = new LocalServerSocket(SOCKET_NAME);
+            LocalServerSocket serverSocket = new LocalServerSocket(socketName);
             dispatchClientTask = new DispatchClientTask(serverSocket);
             dispatchClientTask.start();
         } catch (IOException e) {

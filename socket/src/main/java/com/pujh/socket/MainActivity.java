@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startJavaClientSocket() {
-        client.startClient();
+        client.startClient(SOCKET_NAME);
     }
 
     private void stopJavaClientSocket() {
