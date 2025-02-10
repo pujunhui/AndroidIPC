@@ -14,8 +14,10 @@
 #include <pthread.h>
 #include <jni.h>
 #include <ctype.h>
+#include <sys/epoll.h>
 
 #define LISTEN_BACKLOG 50
+#define BUFFER_SIZE 1024
 
 void *handle_client(void *arg) {
     int cfd = *(int *) arg;
@@ -51,8 +53,8 @@ void *handle_client(void *arg) {
 
 void startServerSocket(const char *name, int namespaceId) {
     int sfd;
-    struct sockaddr_un my_addr, peer_addr;
-    socklen_t peer_addr_size;
+    struct sockaddr_un addr;
+    socklen_t addrlen;
     pthread_t pthread;
 
     /**
@@ -65,9 +67,7 @@ void startServerSocket(const char *name, int namespaceId) {
         return;
     }
 
-    socklen_t addrlen;
-
-    if (socket_make_sockaddr_un(name, namespaceId, &my_addr, &addrlen) == -1) {
+    if (socket_make_sockaddr_un(name, namespaceId, &addr, &addrlen) == -1) {
         LOG_E("socket server make sockaddr_un filed!");
         return;
     }
@@ -77,7 +77,7 @@ void startServerSocket(const char *name, int namespaceId) {
         unlink(name);
     }
 
-    if (bind(sfd, (struct sockaddr *) &my_addr, addrlen) == -1) {
+    if (bind(sfd, (struct sockaddr *) &addr, addrlen) == -1) {
         LOG_E("socket server bind filed!");
         return;
     }
@@ -86,10 +86,11 @@ void startServerSocket(const char *name, int namespaceId) {
         LOG_E("socket server listen filed!");
         return;
     }
+    LOG_D("Accepting connections...");
 
-    peer_addr_size = sizeof(struct sockaddr_un);
     while (true) {
-        int cfd = accept(sfd, (struct sockaddr *) &peer_addr, &peer_addr_size);
+        //处理新连接
+        int cfd = accept(sfd, NULL, NULL);
         if (cfd == -1) {
             LOG_E("socket server accept filed!");
             return;

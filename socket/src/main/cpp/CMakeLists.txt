@@ -5,7 +5,7 @@ project("socket")
 #socket server
 add_library(server SHARED
         socket.cpp
-        server.cpp)
+        server_epoll.cpp)
 
 target_link_libraries(server
         android
